@@ -81,8 +81,8 @@ class ProdutoFragment : Fragment() {
     }
 
     private fun exibirMensagemErro() {
-        binding.etNomeProduto.error = "Por favor preencha o campo de nome"
-        binding.etDetalheProduto.error = "Por favor preencha o campo de detalhe"
+        binding.etNomeProduto.error = if (binding.etNomeProduto.text.isEmpty()) "Por favor preencha o campo de nome" else null
+        binding.etDetalheProduto.error = if (binding.etDetalheProduto.text.isEmpty()) "Por favor preencha o campo de detalhe" else null
     }
 
     private fun limparCampoEdicao() {
