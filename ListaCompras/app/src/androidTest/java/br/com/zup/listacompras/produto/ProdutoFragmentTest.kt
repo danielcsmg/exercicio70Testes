@@ -3,7 +3,6 @@ package br.com.zup.listacompras.produto
 import android.view.View
 import android.widget.EditText
 import androidx.fragment.app.testing.launchFragmentInContainer
-import androidx.test.espresso.Espresso.closeSoftKeyboard
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
@@ -13,7 +12,6 @@ import androidx.test.espresso.matcher.ViewMatchers.hasErrorText
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import br.com.zup.listacompras.R
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -29,6 +27,17 @@ class ProdutoFragmentTest {
             .check(matches(hasErrorText("Por favor preencha o campo de nome")))
         onView(withId(R.id.etDetalheProduto))
             .check(matches(hasErrorText("Por favor preencha o campo de detalhe")))
+    }
+
+    fun testError_ifFieldProductNameAndDetailAreNotEmpty() {
+        val scenario = launchFragmentInContainer<ProdutoFragment>()
+        onView(withId(R.id.etNomeProduto)).perform(typeText("produto1"))
+        onView(withId(R.id.etDetalheProduto)).perform(typeText("detalhe1"))
+        onView(withId(R.id.bvAdicionar)).perform(click())
+        onView(withId(R.id.etNomeProduto))
+            .check(matches(hasNoErrorText()))
+        onView(withId(R.id.etDetalheProduto))
+            .check(matches(hasNoErrorText()))
     }
 
     @Test
@@ -47,20 +56,7 @@ class ProdutoFragmentTest {
         onView(withId(R.id.bvAdicionar)).perform(click())
         onView(withId(R.id.etNomeProduto)).check(matches(hasNoErrorText()))
         onView(withId(R.id.etDetalheProduto)).check(matches(hasErrorText("Por favor preencha o campo de detalhe")))
-
     }
-
-    fun testError_ifFieldProductNameAndDetailAreNotEmpty() {
-        val scenario = launchFragmentInContainer<ProdutoFragment>()
-        onView(withId(R.id.etNomeProduto)).perform(typeText("produto1"))
-        onView(withId(R.id.etDetalheProduto)).perform(typeText("detalhe1"))
-        onView(withId(R.id.bvAdicionar)).perform(click())
-        onView(withId(R.id.etNomeProduto))
-            .check(matches(hasNoErrorText()))
-        onView(withId(R.id.etDetalheProduto))
-            .check(matches(hasNoErrorText()))
-    }
-
 
     private fun hasNoErrorText(): BoundedMatcher<View?, EditText> {
         return object : BoundedMatcher<View?, EditText>(EditText::class.java) {
